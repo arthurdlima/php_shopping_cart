@@ -1,8 +1,42 @@
 <?php
+    //start session to store product ids
+    session_start();
+
     require_once('./php/database.php');
     require_once('./php/component.php');
     // create instance of database class
     $database = new CreateDb("u600020894_productdb", "products","localhost","u600020894_manager",'b$X&A9q>');
+
+    if(isset($_POST['add'])){
+        //print_r($_POST['product_id']);
+        if(isset($_SESSION['cart'])){
+            //return the value in the "product_id" column in the _SESSION['cart'] position
+            $item_array_id = array_column($_SESSION['cart'],"product_id");
+            //if product is already in the session variable
+            if (in_array($_POST['product_id'],$item_array_id)) {
+                echo "<script>alert('Produto já está no carrinho!')</script>";
+                echo "<script>window.location = 'index.php'</script>";
+            } else {
+                //if product is not in the session var, add
+
+                //get the num of items in the session var
+                $count = count($_SESSION['cart']);
+                //create cart item with the current prod id
+                $item_array = array(
+                    'product_id' => $_POST['product_id']
+                );
+                //add to session variable in the count position
+                $_SESSION['cart'][$count] = $item_array;
+            }
+
+        } else {
+            $item_array = array(
+                'product_id' => $_POST['product_id']
+            );
+            //create new session variable
+            $_SESSION['cart'][0] = $item_array;
+        }
+    }
 
  ?>
 
@@ -10,7 +44,7 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0">
         <title>Shopping Cart</title>
         <!-- Font Awesome-->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
@@ -19,6 +53,7 @@
         <link rel="stylesheet" href="style.css">
     </head>
     <body>
+        <?php require_once("php/header.php")?>
 
         <div class="container">
             <div class="row text-center py-5">
@@ -26,6 +61,7 @@
                     //component("Produto 1",599,"./upload/product1.png");
 
                     $result = $database->getData();
+
                     while ($row = mysqli_fetch_assoc($result)){
                         component($row['product_name'], $row['product_price'], $row['product_image'], $row['id']);
                     }
