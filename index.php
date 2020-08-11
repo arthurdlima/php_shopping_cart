@@ -1,17 +1,24 @@
 <?php
     //start session to store product ids
     session_start();
-
+    //$_SESSION = array();
     require_once('./php/database.php');
     require_once('./php/component.php');
+
     // create instance of database class
     $database = new CreateDb("u600020894_productdb", "products","localhost","u600020894_manager",'b$X&A9q>');
 
+
+
     if(isset($_POST['add'])){
+        $count = count($_SESSION['cart']);
+        print_r($count);
+        echo "</br>";
         //print_r($_POST['product_id']);
         if(isset($_SESSION['cart'])){
-            //return the value in the "product_id" column in the _SESSION['cart'] position
+            //return the values in the "product_id" column in the _SESSION['cart'] position to a new array
             $item_array_id = array_column($_SESSION['cart'],"product_id");
+
             //if product is already in the session variable
             if (in_array($_POST['product_id'],$item_array_id)) {
                 echo "<script>alert('Produto já está no carrinho!')</script>";
@@ -20,24 +27,28 @@
                 //if product is not in the session var, add
 
                 //get the num of items in the session var
-                $count = count($_SESSION['cart']);
+                
+
                 //create cart item with the current prod id
                 $item_array = array(
-                    'product_id' => $_POST['product_id']
+                    'product_id' => $_POST['product_id'],
+                    'item_count' => 1
                 );
                 //add to session variable in the count position
                 $_SESSION['cart'][$count] = $item_array;
             }
 
         } else {
+            //create item
             $item_array = array(
-                'product_id' => $_POST['product_id']
+                'product_id' => $_POST['product_id'],
+                'item_count' => 1
             );
             //create new session variable
             $_SESSION['cart'][0] = $item_array;
         }
     }
-
+    print_r($_SESSION['cart']);
  ?>
 
 <!DOCTYPE html>

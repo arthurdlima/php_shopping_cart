@@ -33,7 +33,7 @@
         echo $element;
     }
 
-    function cartElement($productImg, $productName, $productPrice, $productId) {
+    function cartElement($productImg, $productName, $productPrice, $productId, $item_quantity) {
         $element = "
             <form class='cart-items' action='cart.php?action=remove&id=$productId' method='post'>
                 <div class='border rounded'>
@@ -46,17 +46,18 @@
                                 <h5 class='pt-2'>$productName</h5>
                                 <small class='text-secondary'>vendedor: Amazon</small>
                                 <h5 class='pt-2'>R$$productPrice</h5>
-                                <button type='submit' class='btn btn-warning'>Salvar para depois</button>
+                                <!--<button type='submit' class='btn btn-warning'>Salvar para depois</button>-->
                                 <button type='submit' class='btn btn-danger mx-2' name='remove'>remover</button>
                             </div>
                         </div>
                         <div class='col-md-3 py-2 d-flex align-items-center justify-content-center'>
                             <div>
-                                <button type='button' class='btn bg-light border rounded-circle'>
+                                <button type='submit' class='btn bg-light border rounded-circle' name='minus'>
                                     <i class='fas fa-minus'></i>
                                 </button>
-                                <input type='text' class='form-control d-inline' value='1' style='width:3.5rem;'>
-                                <button type='button' class='btn bg-light border rounded-circle'>
+                                <input type='text' class='form-control d-inline' name='inputvalue' value='$item_quantity' style='width:3.5rem;'>
+                                <input type='hidden' name='itemId' value='$productId'>
+                                <button type='submit' class='btn bg-light border rounded-circle' name='plus'>
                                     <i class='fas fa-plus'></i>
                                 </button>
                             </div>
